@@ -15,8 +15,8 @@ import {
   //SimpleGrid,
 } from "@mantine/core";
 import Image from "next/image";
-import arrowleft from "../public/arrowleft.svg";
-import arrowright from "../public/arrowright.svg";
+import arrowleft from "@/public/vectors/arrowleft.svg";
+import arrowright from "@/public/vectors/arrowright.svg";
 import { useEffect, useState } from "react";
 //import axios from "axios";
 import Link from "next/link";
