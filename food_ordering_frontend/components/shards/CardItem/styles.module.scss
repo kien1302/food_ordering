@@ -1,0 +1,168 @@
+@import "../../../styles/scss/mixin";
+@import "../../../styles/scss/variables";
+
+$cardHeight: 420px;
+$cardWidth: 300px;
+$imgHeight: calc($cardHeight - 240px);
+$imgWidth: calc($cardWidth - 40px);
+
+:export{
+  imgHeight: $imgHeight;
+  imgWidth: $imgWidth;
+}
+
+.card {
+  width: $cardWidth;
+  height: $cardHeight;
+  border: 2px solid #25262bb5;
+  background-color: #25262b;
+  position: relative;
+  transition: 0.15s ease-out;
+}
+
+
+
+.card:hover {
+  border: 2px solid $primary !important;
+  transform: translateY(-2px);
+}
+
+.cornerRibbon {
+  /* Displayed at the top left corner */
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  /* Size */
+  height: 4rem;
+  width: 4rem;
+  /* Hide the part of its children which is displayed outside */
+  overflow: hidden;
+}
+
+.cornerRibbonChild {
+  /* Position */
+  left: 1rem;
+  position: absolute;
+  top: 1rem;
+  /* Size */
+  height: 1.4rem;
+  width: 7.2rem;
+  /* Displayed diagonally */
+  transform: translate(-54px, -5px) rotate(-45deg);
+  box-shadow: 0px 4px 6px #1c1a1a;
+  /* Background color */
+  // background-color: #d1d5db;
+  /* Centerize the text content */
+  text-align: center;
+}
+
+.nameNavigate:hover {
+  line-height: normal;
+  text-decoration: underline;
+  color: $primary;
+  cursor: pointer;
+}
+
+.cornerRibbonChildHot {
+  background-color: $pink;
+}
+
+.cornerRibbonChildSale {
+  background-color: $aqua;
+}
+
+.cornerRibbonChildNew {
+  background-color: $primary;
+}
+
+.rightSection {
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
+}
+
+.nameNavigate{
+  line-height: normal;
+}
+
+.buttonAdd {
+  width: 7.6vw;
+  height: 2.1vw;
+}
+
+// Store_name
+.borderBox{
+  width: fit-content;
+  padding: 3px 8px 3px 8px;
+  border-radius: 5px;
+}
+
+.halfBottomBox{
+    position: relative;
+    border-radius: 5px;
+    margin: auto;
+    padding: 6.42px 20px 3px 20px;
+    background: #25262b;
+    bottom: 0.6725rem;
+  }
+  
+.halfBottomBox:after {
+    content: "" ;
+    position: absolute;
+    margin-left: -1.5px;
+    bottom: 0px;
+    width: 103%;
+    left: 0px;
+    height: 40%;
+    border-bottom: 2px solid #393939;
+    border-left: 1px solid #393939;
+    border-right: 1px solid #393939;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+// Price, button
+.bottomSection{
+  position: relative;
+  top: 10px;
+  margin-bottom: 10px;
+}
+
+.imageButton {
+  z-Index: 2;
+  position: relative;
+  bottom: 120px;
+  margin: auto;
+}
+
+.image{
+  z-Index: 1;
+  object-fit: cover;
+  border-Radius: 5px;
+  transition: opacity .5s ease;
+}
+
+.imageFrontContainer{
+  width: $imgWidth;
+  height: $imgHeight;
+  border: 1px solid #25262bb5;
+  border-radius: 5px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.cardSection {
+  width: $imgWidth;
+  height: $imgHeight;
+  padding: 1.7rem 1.2rem 1.7rem 0.9rem;
+}
+
+.imageBackContainer{
+  position: relative;
+  bottom: 22px;
+  right: 22px;
+  width: fit-content;
+  height: fit-content;
+  overflow: hidden;
+}
+

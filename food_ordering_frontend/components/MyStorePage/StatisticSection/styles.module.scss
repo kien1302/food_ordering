@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+$green: rgb(9, 146, 104);
+$red: rgb(224, 49, 49);
+$purple: rgb(156, 54, 181);
+
+
+.labelFont {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.valueFont {
+    font-size: 30px;
+    height: 2rem;
+    font-family: 'Varela Round', sans-serif;
+    letter-spacing: 1px;
+}
+
+.smallValueFont {
+    font-size: 12px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: 400;
+}
+
+.borderRadius
+{
+    padding: 15px 15px 15px 15px;
+    background: #25262b;
+    border-radius: 5px;   
+}
+
+.clockSection{
+    @extend .borderRadius;
+    border-Top-Left-Radius: 0px;
+    border-Bottom-Left-Radius: 0px;
+    padding: 15px 15px;
+}
+
+.balanceSection
+{
+    @extend .borderRadius;      
+}
+
+.newSection
+{
+    @extend .borderRadius;
+}
+
+.transactionsHitorySection
+{
+    @extend .borderRadius;
+    height: 100%;
+    width: 100%
+}
+
+.bestSoldProductsSection
+{
+    @extend .borderRadius;
+    width: 100%;
+    height: 100%;
+}
+
+.ringChartSection
+{
+    @extend .borderRadius;
+    width: 100%;
+    height: 100%;
+}
+
+.rankColumn
+{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;  
+    height: 0.625rem;
+}
+
+.firstRankColumn
+{
+    @extend .rankColumn;
+    background: #ce9700;
+    width: 100%;
+}
+
+.secondRankColumn
+{
+    @extend .rankColumn;
+    background: #c4c4c4;
+    width: 80%;
+}
+
+.thirdRankColumn
+{
+    @extend .rankColumn;
+    background: #75490f;
+    width: 60%;
+}
