@@ -22,7 +22,7 @@ System Requirements:
 - Run
 
 ```
-$ git clone https://github.com/baonguyen120301/food_delivery_frontend.git
+$ git clone https://github.com/huynhgiakien2001/food_delivery_frontend.git
 $ cd food_delivery_frontend
 $ yarn
 

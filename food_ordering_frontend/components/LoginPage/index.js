@@ -2,24 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   Paper,
   Image,
-  //BackgroundImage,
   TextInput,
   Text,
-  //Container,
   Group,
   Stack,
-  //ActionIcon,
   PasswordInput,
-  //Checkbox,
   Button,
   Center,
 } from "@mantine/core";
-import MyStoreLoginPage from "../MyStoreLoginPage";
 import styles from "./styles.module.scss";
 import { BiUserCircle } from "react-icons/bi";
 import { HiLockClosed } from "react-icons/hi";
 import { SlArrowLeft } from "react-icons/sl";
-//import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import loginSchema from "./validate";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -30,12 +24,9 @@ import { TiTick } from "react-icons/ti";
 import { MdOutlineClose } from "react-icons/md";
 import { showNotification } from "@mantine/notifications";
 import { login } from "@/redux/user";
-import { boolean } from "joi";
 import AlertPopup from "../shards/AlertPopup";
 
 export default function LoginPage(props) {
-  // const [isFocus, setIsFocus] = useState({ name: "", isActive: false });
-  // const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -64,7 +55,7 @@ export default function LoginPage(props) {
       showNotification({
         autoClose: 4000,
         title: "Login success",
-        message: "Welcome to Food Delivery 🚀",
+        message: "Welcome to Food Ordering 🚀",
         color: "green",
         icon: <TiTick color="white" />,
       });
@@ -209,6 +200,7 @@ export default function LoginPage(props) {
                   <Link
                     href="/customer/register"
                     style={{ color: "#61afef", fontSize: 13 }}
+                    className={styles.linkHover}
                   >
                     Create a new account?
                   </Link>

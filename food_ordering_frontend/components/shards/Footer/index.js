@@ -113,11 +113,11 @@ function Footer() {
           <HorizontalList
             data={[
               { title: "Company" },
-              { title: "About Us", path: "/" },
+              { title: "About Us", path: "/about" },
               { title: "Service", path: "/" },
-              { title: "Case Studies", path: "/" },
-              { title: "Blog", path: "/" },
-              { title: "Contact", path: "/" },
+              { title: "Case Studies", path: "/case" },
+              { title: "Blog", path: "/blog" },
+              { title: "Contact", path: "/contact" },
             ]}
           />
         </Grid.Col>

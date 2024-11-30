@@ -1,33 +1,11 @@
 export const introduceData = [
-  // {
-  //   id: 0,
-  //   content: "Leader of team",
-  //   profile: "Nguyen Hoang Quoc Bao",
-  //   image:
-  //     "https://scontent.fsgn19-1.fna.fbcdn.net/v/t39.30808-6/268581193_1937409916438034_557087352001693024_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=fxptNEHo0WoAX-4MfgZ&tn=ojgNsE8c27fmYnDy&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfCTqXCUJwBhxxoifu4ml-2ibTVeZEXxHpOV88vRkGZNdg&oe=639CFB13",
-  //   title: "Welcome to Delivery Food Member",
-  // },
   {
     id: 0,
-    content: "Front-end Dev",
-    profile: "Hau Kien Tin",
+    content: "Full-stack Dev",
+    profile: "Huynh Gia Kien",
     image:
-      "https://scontent.fsgn19-1.fna.fbcdn.net/v/t1.6435-9/67404001_2093573720938738_7193688527056404480_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=174925&_nc_ohc=88rhed9Wli0AX_wNL4b&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfCue8vNrqyBBRYT25Iwb_isk4vygtOfctDuFmhp3ET_XA&oe=63BF93C2",
-    title: "Welcome to Delivery Food Member",
-  },
-  {
-    id: 1,
-    content: "Back-end Dev",
-    profile: "Chu Nguyen Hoang Son",
-    image: "/images/hoangson.jpg",
-    title: "Welcome to Delivery Food Member",
-  },
-  {
-    id: 2,
-    content: "Tensorflow Dev",
-    profile: "Nguyen Quang Tung",
-    image: "/images/tungnguyen.jpg",
-    title: "Welcome to Delivery Food Member",
+      "https://cdn-icons-png.flaticon.com/512/6840/6840478.png",
+    title: "Welcome to Food Ordering",
   },
 ];
 

@@ -17,18 +17,14 @@ import {
   Image,
 } from "@mantine/core";
 import { IconEdit } from "@tabler/icons";
-import axios from "axios";
-import { IpfsClient } from "@/lib/api/ipfsClient";
 import { getProductType, getAllProductsType, editProductType } from "@/lib";
-//import Image from "next/image";
 
 const useStyles = createStyles((theme) => ({
   root: {
-    marginLeft: 270,
     height: "100%",
     width: "30vw",
     paddingTop: 80,
-    position: "sticky",
+    // position: "sticky",
     zIndex: 1,
   },
   rowSelected: {
@@ -68,9 +64,21 @@ export default function MyStoreAllProductsTypePage() {
   const [typeArray, setTypeArray] = useState([]);
   const { classes } = useStyles();
   const theme = useMantineTheme();
+  let saveCookie = {};
   const [opened, setOpened] = useState(false);
-  const savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
-  const store_id = savedCookie.storeId;
+  const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+    const [key, value] = cookie.split("=");
+    acc[key] = value;
+    return acc;
+  }, {});
+
+  if (cookies.Sel) {
+    saveCookie = JSON.parse(cookies.Sel);
+  } else {
+    console.log("Sel cookie does not exist.");
+  }
+  // const savedCookie = JSON.parse(document.cookie.split("Sel=")[1] || {});
+  // const store_id = savedCookie.storeId || "";
 
   // product info
   const [idProductType, setIdProductType] = useState("");
@@ -84,10 +92,12 @@ export default function MyStoreAllProductsTypePage() {
 
   async function getAllProductTypesInfo() {
     try {
-      const [response, error] = await getAllProductsType(store_id);
-
-      if (response.length > 0) {
-        setTypeArray(response);
+      if (saveCookie?.storeId) {
+        const [response, error] = await getAllProductsType(saveCookie?.storeId ?? "");
+  
+        if (response.length > 0) {
+          setTypeArray(response);
+        }
       }
     } catch (err) {
       console.log(err);

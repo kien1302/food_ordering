@@ -130,17 +130,19 @@ function StoreDetailPage() {
             height: "0.2rem",
             width: "100%",
           }}></Group>
-        <Grid pl={200} style={{ flex: 1, marginBottom: 50 }} columns={18}>
+        <Grid pl={200} style={{ flex: 1, marginBottom: 50 }} grows>
           {storedetail.products.map((item, index) => (
             <Grid.Col key={item.pid} span={4}>
               <CardItem
                 pid={item.id}
+                sid={item.sid}
                 description={item.description}
                 type={item.type_name}
                 name={item.name}
                 image={item.image}
                 price={item.price}
                 hidden={true}
+                loading={loading}
               />
             </Grid.Col>
           ))}

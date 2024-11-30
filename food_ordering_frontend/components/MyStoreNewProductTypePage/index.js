@@ -1,14 +1,11 @@
 import {
   Button,
   createStyles,
-  Group,
   Paper,
   Text,
-  Stack,
   TextInput,
 } from "@mantine/core";
 import { useState } from "react";
-import axios from "axios";
 import { genRandonString } from "../common";
 import { createProductType } from "@/lib";
 
@@ -16,10 +13,10 @@ const useStyles = createStyles((theme) => ({
   root: {
     paddingTop: 80,
     height: "100%",
-    marginLeft: 270,
+    // marginLeft: 270,
     width: "22vw",
-    position: "sticky",
-    zIndex: 2,
+    // position: "sticky",
+    zIndex: 1,
   },
 
   textInput: {

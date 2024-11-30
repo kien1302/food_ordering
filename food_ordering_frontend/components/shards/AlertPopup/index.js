@@ -9,7 +9,7 @@ export default function AlertPopup({ Title, Content, LinkRef, ButtonName }) {
         title={Title}
         style={{
           background: "#005a32",
-          zIndex: 100,
+          zIndex: "9999 !important",
           width: 350,
           height: "fit-content",
           overflow: "auto",

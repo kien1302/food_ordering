@@ -1,1 +1,15 @@
 @import "../../styles/scss/mixin";
+
+.loading {
+    height: 410px;
+    width: 100%;
+    text-align: center;
+}
+
+.title {
+    margin-left: 120px;
+    padding: 24px 0px;
+    color: white;
+    font-size: x-large;
+    font-weight: 500;
+}

@@ -6,7 +6,6 @@ import {
   NumberInput,
   Paper,
   Select,
-  Stack,
   Text,
   Textarea,
   TextInput,
@@ -15,15 +14,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import image from "/public/images/default-thumbnail.jpg";
 import { getAllProductsType, createProduct } from "@/lib";
-import axios from "axios";
 import { IpfsClient } from "@/lib/api/ipfsClient";
 
 const useStyles = createStyles((theme) => ({
   root: {
     paddingTop: 80,
-    position: "absolute",
     zIndex: 1,
-    marginLeft: 635,
+    marginLeft: 20,
     height: "80%",
   },
   title: {
@@ -100,6 +97,15 @@ export default function MyStoreNewProductPage() {
     }
   }, []);
 
+  function resetForm() {
+    setNameProduct("")
+    setDescription("")
+    setDescription("")
+    setPrice(0)
+    setFile(null)
+    setTypeChosen("")
+  }
+
   async function newProduct() {
     setLoading(true);
     if (
@@ -157,7 +163,7 @@ export default function MyStoreNewProductPage() {
 
     var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
     var localISOTime =
-      new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + "+7:00";
+      new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + "+07:00";
 
     const created_date = localISOTime;
     const updated_date = created_date;
@@ -185,6 +191,7 @@ export default function MyStoreNewProductPage() {
         return;
       } else {
         alert(response.message);
+        resetForm();
       }
     } catch (err) {
       setLoading(false);

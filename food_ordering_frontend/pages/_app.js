@@ -9,29 +9,35 @@ import { Provider } from "react-redux";
 import { Notifications } from "@mantine/notifications";
 import { AppShell, Loader } from "@mantine/core";
 import store from "@/redux";
-// Using lazy loading for components (optional)
 import Header from "@/components/shards/Header";
-//import Footer from "@/components/shards/Footer";
 const Footer = dynamic(() => import("@/components/shards/Footer"));
 import NavigationBar from "@/components/shards/NavigationBar";
 import BreadCrumb from "@/components/shards/BreadCrumb";
-//
+import AdminNavigationBar from "@/components/AdminNavigationBar";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [pageloader, setPageLoader] = useState(true);
   const path = router.pathname;
   const [isSeller, setIsSeller] = useState(false);
-
+  const [isAdmin, setIsAdmin] = useState(false);
   useMemo(() => {
     if (path.includes("seller") || path.includes("mystore")) {
       if (isSeller !== true) {
         setIsSeller(true);
+        setIsAdmin(false);
+        setPageLoader(true);
+      }
+    } else if (path.includes("admin") || path.includes("myadmin")) {
+      if (isAdmin !== true) {
+        setIsAdmin(true);
+        setIsSeller(false);
         setPageLoader(true);
       }
     } else {
-      if (isSeller !== false) {
+      if (isSeller !== false || isAdmin !== false) {
         setIsSeller(false);
+        setIsAdmin(false);
         setPageLoader(true);
       }
     }
@@ -59,25 +65,36 @@ function MyApp({ Component, pageProps }) {
         </div>
       ) : (
         <>
-          {isSeller ? (
+          {isSeller || isAdmin ? (
             //<Provider store={store}>
             <MantineProvider theme={{ colorScheme: "dark" }} withGlobalStyles withNormalizeCSS>
               <Notifications />
-              {path.includes("/mystore") ? (
-                <AppShell navbarOffsetBreakpoint="sm" navbar={<NavigationBar />}>
-                  <Component {...pageProps} />
-                </AppShell>
-              ) : (
-                <Component {...pageProps} />
-              )}
+              {
+                isSeller ? (
+                  path.includes("/mystore") ? (
+                    <AppShell navbarOffsetBreakpoint="sm" navbar={<NavigationBar />}>
+                      <Component {...pageProps} />
+                    </AppShell>
+                  ) : (
+                    <Component {...pageProps} />
+                  )
+                ) : (
+                  path.includes("/myadmin") ? (
+                    <AppShell navbarOffsetBreakpoint="sm" navbar={<AdminNavigationBar />}>
+                      <Component {...pageProps} />
+                    </AppShell>
+                  ) : (
+                    <Component {...pageProps} />
+                  )
+                )
+              }
             </MantineProvider>
           ) : (
-            //</Provider>
             <Provider store={store}>
               <MantineProvider theme={{ colorScheme: "dark" }} withGlobalStyles withNormalizeCSS>
                 <Notifications />
                 {/* Hide shard components in these pages */}
-                {!path.includes("/customer", "/seller", "/_error", "/paymentsuccess") ? (
+                {!path.includes("/customer", "/seller", "/_error", "/paymentsuccess", "/admin") ? (
                   <>
                     <Header />
                     <BreadCrumb />

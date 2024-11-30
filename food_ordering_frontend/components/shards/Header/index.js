@@ -14,6 +14,7 @@ import {
   Indicator,
   Select,
   Divider,
+  Flex,
 } from "@mantine/core";
 import { FiSearch } from "react-icons/fi";
 import {
@@ -44,38 +45,16 @@ function Header() {
 
   const [isDrop, setIsDrop] = useState(false);
   const [isUser, setUser] = useState({});
-  const user = useSelector(getUser);
-  const checkDate = new Date(Date.now());
 
   const [isVisible, setIsVisible] = useState(true);
   const [dropMenu, setDropMenu] = useState(false);
-  //const [height, setHeight] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [searchData, setSearchData] = useState([]);
 
-  const data = ["All Categories", "food", "drink"];
-  // const tabData = [{value:}]
   const { cart } = useSelector(getCart);
   const { wishlist } = useSelector(getWishlist);
   const img_load = process.env.NEXT_PUBLIC_IPFS_URL;
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", listenToScroll);
-  //   return () => window.removeEventListener("scroll", listenToScroll);
-  // });
-
-  //////// Hide half-top when scroll to specific height////
-  // const listenToScroll = () => {
-  //   let heightToHideFrom = 100;
-  //   const winScroll = document.documentElement.scrollTop;
-
-  //   if (winScroll > heightToHideFrom) {
-  //     setIsVisible(false);
-  //   } else {
-  //     setIsVisible(true);
-  //   }
-  // };
-  /////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (document.cookie.indexOf("Cus") > -1) {
@@ -148,7 +127,7 @@ function Header() {
           justify="center"
           columns={12}
         >
-          <Grid.Col span={2}>
+          <Grid.Col span={1}>
             <Link href="/">
               <Image
                 priority
@@ -163,7 +142,7 @@ function Header() {
             </Link>
           </Grid.Col>
 
-          <Grid.Col span={2}>
+          <Grid.Col span={4}>
             <TextInput
               ref={wrapperRef}
               onKeyDown={handleKeyDown}
@@ -171,6 +150,9 @@ function Header() {
               onChange={(event) => setSearchInput(event.currentTarget.value)}
               rightSection={<FiSearch />}
               placeholder="Search..."
+              style={{ 
+                maxWidth: 320
+              }}
             />
             {dropMenu && searchData && isClickedOutside && (
               <ScrollArea
@@ -234,21 +216,6 @@ function Header() {
             )}
           </Grid.Col>
 
-          <Grid.Col span={2}>
-            <Select
-              data={data}
-              itemProp={{ color: "green" }}
-              // labelProps={style: {color: 'green'}}
-              wrapperProps={{ border: "1px", boxshadow: "5px 8px" }}
-              icon={<GrLocation size={14} className={styles.icon} />}
-              rightSection={
-                isDrop ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />
-              }
-              onDropdownOpen={() => setIsDrop(true)}
-              onDropdownClose={() => setIsDrop(false)}
-              defaultValue={data[0]}
-            />
-          </Grid.Col>
           {/* action icon: Wish list & Cart */}
           <Grid.Col span={3}>
             <Group spacing="xs" grow position="center">
@@ -323,17 +290,17 @@ function Header() {
           transition: "all 0.3s ease",
         }}
       >
-        <Group spacing="xl" className={styles.subHeader}>
-          <NativeSelect
-            data={["All Categories", "Food", "Drink"]}
-            icon={<GrApps />}
-            rightSection={<MdKeyboardArrowDown />}
-          />
-
+        <Flex 
+          gap="xl"
+          justify="center"
+          align="center"
+          direction="row"
+          wrap="wrap"
+        >
           <MainMenu
             data={[
               { title: "Home", path: "/" },
-              { title: "About", path: "/" },
+              { title: "About", path: "/about" },
               { title: "Store", path: "/store" },
             ]}
           />
@@ -365,10 +332,10 @@ function Header() {
           <Divider size="sm" orientation="vertical" />
 
           <Contact
-            phoneNumber={"(xxx) xxx-xxxx"}
+            phoneNumber={"(012) 345-6789"}
             dateTime={"Contact for help!"}
           />
-        </Group>
+        </Flex>
       </Paper>
     </Container>
   );

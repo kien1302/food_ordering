@@ -8,6 +8,7 @@ import {
   Group,
   Stack,
   Skeleton,
+  Flex,
 } from "@mantine/core";
 //import { useDisclosure } from "@mantine/hooks";
 //import StarRating, { CountingStar } from "./components/StarRating";
@@ -22,7 +23,6 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import clsx from "classnames";
 import { getCart, addToCart, updateCart } from "@/redux/cart";
 import styles, { imgHeight, imgWidth } from "./styles.module.scss";
-import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { getWishlist, addToWishlist } from "@/redux/wishlist";
 import Image from "next/image";
@@ -34,6 +34,7 @@ import SelectDetail from "@/components/DetailPage/SelectDetail";
 
 function CardItem({
   pid,
+  sid,
   type,
   name,
   price,
@@ -60,7 +61,7 @@ function CardItem({
   const { cart } = useSelector(getCart);
   const [quantity, setQuantity] = useState(1);
 
-  const productData = { pid, type, name, price, store_name, image };
+  const productData = { pid, sid, type, name, price, store_name, image };
 
   const toggleWishlist = () => {
     setAddWishlist(!addWishlist);
@@ -111,8 +112,8 @@ function CardItem({
                 {trending == "hot"
                   ? "Hot"
                   : trending == "sale"
-                  ? "Sale"
-                  : "New"}
+                    ? "Sale"
+                    : "New"}
               </Text>
             </div>
           </div>
@@ -302,14 +303,19 @@ function CardItem({
               justify="space-around"
               style={{
                 position: "relative",
-                height: "10.325rem",
                 bottom: "14px",
               }}
             >
-              <Stack spacing={1}>
+              <Flex
+                gap="md"
+                justify={"space-between"}
+                align="center"
+                direction="row"
+                wrap="wrap"
+              >
                 <Group className={styles.halfBottomBox}>
                   <Text
-                    size={32}
+                    size={28}
                     weight={600}
                     c="#ffffffe8"
                     sx={{ fontFamily: "Bahnschrift" }}
@@ -353,7 +359,7 @@ function CardItem({
                     </Text>
                   </Group>
                 </Group>
-              </Stack>
+              </Flex>
               <Group position="apart" mt={10} mb={20}>
                 <Stack spacing={5} style={{ margin: "auto" }}>
                   <SelectDetail

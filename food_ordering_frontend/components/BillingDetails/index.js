@@ -46,7 +46,7 @@ function BillingDetails({ opened, closed }) {
     if (data) {
       showNotification({
         title: "Register success",
-        message: "Welcome to Jobable 🚀",
+        message: "Welcome to Food Ordering 🚀",
         color: "green",
         icon: <TiTick color="white" />,
       });

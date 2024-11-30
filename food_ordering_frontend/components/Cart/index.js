@@ -32,7 +32,7 @@ function Cart() {
     return removeItem;
   };
 
-  //console.log("cart", cart);
+  console.log("cart", cart);
   const rows = cart.map((element) => (
     <tr key={element.pid}>
       <td>

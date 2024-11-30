@@ -16,7 +16,6 @@ import {
 } from "react-icons/bs";
 import ProvideCard from "../shards/ProvideBox";
 function AboutUsPage() {
-  // console.log("user", JSON.parse(sessionStorage.getItem("user")));
   const [active, setActive] = useState(introduceData[0]);
   return (
     <div className={styles.container}>
@@ -30,17 +29,6 @@ function AboutUsPage() {
             width={400}
             height={400}
           />
-          <div className={styles.activeButtonGroup}>
-            {introduceData.map((info) => (
-              <div
-                key={info.id}
-                className={
-                  active.id === info.id ? styles.active : styles.roundButton
-                }
-                onClick={() => setActive(info)}
-              ></div>
-            ))}
-          </div>
         </div>
         <div className={styles.introduceContent}>
           <Stack justify="space-between">
@@ -49,45 +37,8 @@ function AboutUsPage() {
               {active.content}
             </Text>
             <Text>{active.profile}</Text>
-            <div className={styles.buttonContainer}>
-              <ActionIcon
-                className={styles.arrowButton}
-                onClick={() => setActive((pre) => introduceData[pre.id - 1])}
-                disabled={active.id === 0}
-              >
-                <BsFillArrowLeftCircleFill
-                  color={active.id === 0 ? "gray" : "#3bd884"}
-                  size={30}
-                />
-              </ActionIcon>
-              <ActionIcon
-                onClick={() => setActive((pre) => introduceData[pre.id + 1])}
-                disabled={active.id === 2}
-                className={styles.arrowButton}
-              >
-                <BsFillArrowRightCircleFill
-                  color={active.id === 2 ? "gray" : "#3bd884"}
-                  size={30}
-                />
-              </ActionIcon>
-            </div>
+            
           </Stack>
-          <Group position="left" spacing="xl">
-            {introduceData
-              .filter((value) => value.id !== active.id)
-              .map((value) => (
-                <Image
-                  priority
-                  loader={({ src }) => src}
-                  key={value.id}
-                  src={value.image}
-                  width={150}
-                  height={150}
-                  onClick={() => setActive(value)}
-                  alt={`${value.title} banner`}
-                />
-              ))}
-          </Group>
         </div>
       </Group>
 

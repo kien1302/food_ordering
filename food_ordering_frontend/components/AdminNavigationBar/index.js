@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createStyles, Navbar, Group, Box, Text, getStylesRef, rem } from "@mantine/core";
 import { IconLayoutGridAdd, IconBorderAll, IconReceipt, IconDashboard, IconMessage } from "@tabler/icons";
-import { UserButton } from "./UserButton";
+import AdminUserButton from "./AdminUserButton";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -65,45 +65,23 @@ const useStyles = createStyles((theme) => ({
 
 const data = [
   {
-    link: "/mystore",
+    link: "/myadmin",
     label: "Dashboard",
     icon: IconDashboard
   },
   {
-    link: "/mystore/new-product",
-    label: "New Product / Types",
+    link: "/myadmin/users",
+    label: "Users Management",
     icon: IconLayoutGridAdd,
   },
-  // {
-  //   link: "/mystore/new-product-type",
-  //   label: "New Product Type",
-  //   icon: IconLayoutGridAdd,
-  // },
-  // {
-  //   link: "/mystore/all-products-types",
-  //   label: "All Product Types",
-  //   icon: IconBorderAll,
-  // },
   {
-    link: "/mystore/all-products",
-    label: "All Products / Types",
+    link: "/myadmin/reviews",
+    label: "Reviews Management",
     icon: IconBorderAll,
   },
-  {
-    link: "/mystore/orders",
-    label: "Orders",
-    icon: IconReceipt
-  },
-  {
-    link: "/mystore/reviews",
-    label: "Customer Reviews",
-    icon: IconMessage
-  },
-  // { link: "", label: "Stats", icon: IconCalendarStats },
-  // { link: "", label: "Store Settings", icon: IconSettings },
 ];
 
-export default function NavigationBar() {
+export default function AdminNavigationBar() {
   const { classes, cx } = useStyles();
 
   const router = useRouter();
@@ -115,8 +93,8 @@ export default function NavigationBar() {
   const [opened, setOpened] = useState(false);
 
   async function fetchUserData() {
-    if (document.cookie.indexOf("Sel") > -1) {
-      const savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
+    if (document.cookie.indexOf("Adm") > -1) {
+      const savedCookie = JSON.parse(document.cookie.split("Adm=")[1]);
       setName(savedCookie.name);
       setEmail(savedCookie.email);
       setIsLogin(true);
@@ -181,11 +159,12 @@ export default function NavigationBar() {
         borderColor: "#353a3c",
       }}
       height={"100%"}
-      width={{ base: 245 }}>
+      width={{ base: 245 }}
+    >
       <Group position="left" className={classes.header}>
         <Image priority loader={({ src }) => src} src={"/images/logo.png"} alt="/images/default-thumbnail.jpg" height={30} width={30} />
         <Text className={styles.headertitle} size={20} color="#27ca7d">
-          FO Store
+          FD ADMIN
         </Text>
       </Group>
       <Navbar.Section grow>
@@ -195,7 +174,7 @@ export default function NavigationBar() {
       </Navbar.Section>
       <Navbar.Section>
         <div className={classes.footer}>
-          <UserButton email={email} name={name} />
+          <AdminUserButton email={email} name={name} />
         </div>
       </Navbar.Section>
     </Navbar>

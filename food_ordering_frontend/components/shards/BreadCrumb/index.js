@@ -69,7 +69,7 @@ function BreadCrumb({ name }) {
         >
           <BiArrowBack
             size={20}
-            color={router.pathname == "/" ? "ccc" : "#253d4e"}
+            color={router.pathname !== "/" ? "ccc" : "#253d4e"}
           />
         </ActionIcon>
         <Stack

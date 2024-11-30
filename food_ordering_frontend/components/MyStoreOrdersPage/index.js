@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
 import { IconCircleCheck } from "@tabler/icons";
 import moment from "moment";
 import { getAllOrdersWithParams, orderProceeding } from "@/lib";
+import AlertPopup from "../shards/AlertPopup";
+import { useRouter } from "next/navigation";
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -54,7 +56,7 @@ const useStyles = createStyles((theme) => ({
     width: 155,
   },
   root: {
-    marginLeft: "270px",
+    // marginLeft: "270px",
     marginTop: 20,
     height: "100%",
   },
@@ -66,6 +68,7 @@ const useStyles = createStyles((theme) => ({
 
 export default function MyStoreOrdersPage() {
   const { classes } = useStyles();
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [size, setSize] = useState(20);
@@ -82,25 +85,35 @@ export default function MyStoreOrdersPage() {
   const theme = useMantineTheme();
 
   useEffect(() => {
-    var savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
-    var store_id = savedCookie.storeId;
-    var user_id = savedCookie.userId;
+    if (!document.cookie.split("Sel=")[1]) {
+      <AlertPopup
+        Title={"Login required"}
+        Content={"We need you to login before accessing this page!"}
+        LinkRef={"/seller/login"}
+        ButtonName={"Login"}
+      />
+      router.push("/seller/login")
+    } else {
+      var savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
+      var store_id = savedCookie.storeId;
+      var user_id = savedCookie.userId;
 
-    async function getAllOrders() {
-      try {
-        const [response, err] = await getAllOrdersWithParams(store_id, currentPage, size);
-        setTotalOrders(response.items.length);
-        setTotalPages(response.pages);
-        setHasNext(response.hasNext);
-        setHasPrevious(response.hasPrevious);
-        setOrders(response.items);
-        setIsProceed(false);
-      } catch (err) {
-        console.log(err);
+      async function getAllOrders() {
+        try {
+          const [response, err] = await getAllOrdersWithParams(store_id, currentPage, size);
+          setTotalOrders(response.items.length);
+          setTotalPages(response.pages);
+          setHasNext(response.hasNext);
+          setHasPrevious(response.hasPrevious);
+          setOrders(response.items);
+          setIsProceed(false);
+        } catch (err) {
+          console.log(err);
+        }
+        setIsFinish(true);
       }
-      setIsFinish(true);
+      getAllOrders();
     }
-    getAllOrders();
   }, []);
 
   //Get orders with products which are not be seen yet
@@ -114,13 +127,13 @@ export default function MyStoreOrdersPage() {
           return null;
         })
         .filter(Boolean);
-
-      console.log(unSeenArray);
     }
   }, [orders]);
 
   async function ProceedOrder(order_id, product_id) {
     setLoading(true);
+    var savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
+    var store_id = savedCookie.storeId;
     const data = {
       order_id: order_id,
       product_id: product_id,
@@ -129,15 +142,15 @@ export default function MyStoreOrdersPage() {
 
     try {
       const response = await orderProceeding(data);
-      if (response.data.error) {
-        alert(response.data.error);
+      if (response.error) {
+        alert(response.error);
         setOpened(false);
         setLoading(false);
       } else {
-        //alert(response.data.message);
         setIsProceed(true);
         setOpened(false);
         setLoading(false);
+        window.location.reload();
       }
     } catch (err) {
       console.log(err);

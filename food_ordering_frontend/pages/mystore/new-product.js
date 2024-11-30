@@ -1,10 +1,15 @@
 import MyStoreNewProductPage from "@/components/MyStoreNewProductPage";
 import MyStoreNewProductTypePage from "@/components/MyStoreNewProductTypePage";
+import { Flex } from "@mantine/core";
 
 export default function mystorenewproduct() {
   return (
-    <>
-      <MyStoreNewProductPage /> <MyStoreNewProductTypePage />
-    </>
+    <Flex
+      direction="row"
+      
+    >
+      <MyStoreNewProductTypePage />
+      <MyStoreNewProductPage />
+    </Flex>
   );
 }

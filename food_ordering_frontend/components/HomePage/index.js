@@ -103,6 +103,7 @@ function HomePage() {
                         <Grid.Col key={item.pid} span={4} mb={10}>
                           <CardItem
                             pid={item.pid}
+                            sid={item.sid}
                             ordered={item.ord_amount}
                             store_name={item.store_name}
                             description={item.description}
@@ -127,6 +128,7 @@ function HomePage() {
                         <Grid.Col key={item.pid} span={4}>
                           <CardItem
                             pid={item.pid}
+                            sid={item.sid}
                             ordered={item.ord_amount}
                             store_name={item.store_name}
                             description={item.description}

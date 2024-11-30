@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import CardStore from "../shards/CardStore";
 import { getAllStores } from "@/lib/api/stores";
 import styles from "./styles.module.scss";
-import { Grid } from "@mantine/core";
+import { Grid, Text } from "@mantine/core";
 
 function StorePage() {
   const [loading, setLoading] = useState(true);
@@ -30,6 +30,7 @@ function StorePage() {
         paddingBottom: 10,
       }}
     >
+      <Text className={styles.title}>We have all types of stores here</Text>
       <Grid style={{ flex: 1 }} columns={14} align="center" justify="center">
         {stores ? (
           stores.map((item, index) => (
@@ -46,7 +47,7 @@ function StorePage() {
             </Grid.Col>
           ))
         ) : (
-          <div>Loading</div>
+          <div className={styles.loading}>Loading...</div>
         )}
       </Grid>
     </div>

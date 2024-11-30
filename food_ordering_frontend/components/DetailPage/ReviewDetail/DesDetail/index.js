@@ -25,22 +25,29 @@ function DesDetail({ storeinfo }) {
   const [randproduct, setRandProduct] = useState([]);
 
   useEffect(() => {
-    const getRandProducts = async () => {
-      const value = {
-        store_id: storeinfo.sid,
-        product_id: id,
+    try {
+      setLoading(true);
+      const getRandProducts = async () => {
+        const value = {
+          store_id: storeinfo.sid,
+          product_id: id,
+        };
+        const [data, error] = await getRandomProducts(value);
+  
+        if (data) {
+          setRandProduct(data);
+        } else {
+          console.log(error);
+        }
       };
-      const [data, error] = await getRandomProducts(value);
-
-      if (data) {
-        setRandProduct(data);
-        setLoading(true);
-      } else {
-        console.log(error);
-      }
-    };
-
-    getRandProducts();
+  
+      getRandProducts();
+    } catch (e) {
+      console.error("error: ", e)
+    } finally {
+      setLoading(false)
+    }
+    
   }, [id]);
 
   return (
@@ -78,7 +85,7 @@ function DesDetail({ storeinfo }) {
                 height={120}
                 width={200}
                 radius="md"
-                src={img_load + storeinfo.image}
+                src={img_load + storeinfo?.image}
                 alt="Store Image"
               />
             </div>
@@ -138,18 +145,21 @@ function DesDetail({ storeinfo }) {
           Other products you may like:
         </Title>
       </Stack>
-      <Grid mt={20} cols={5}>
-        {loading &&
+      <Grid mt={20} grow>
+        {!loading &&
           randproduct.map((item) => (
-            <Grid.Col key={item.pid} span={3}>
+            <Grid.Col key={item.id} span={3}>
               <CardItem
                 pid={item.id}
+                sid={item.sid}
                 description={item.description}
                 type={item.type_name}
                 name={item.name}
                 image={item.image}
                 price={item.price}
                 hidden={true}
+                store_name={storeinfo.name}
+                loading={loading}
               />
             </Grid.Col>
           ))}

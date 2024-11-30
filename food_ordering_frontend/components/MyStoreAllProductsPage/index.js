@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import {
   createStyles,
   Table,
-  //Checkbox,
   useMantineTheme,
   Group,
   Modal,
   Text,
-  Stack,
   Paper,
   Button,
   FileInput,
@@ -20,17 +18,16 @@ import {
 import { IconEdit } from "@tabler/icons";
 import axios from "axios";
 import { IpfsClient } from "@/lib/api/ipfsClient";
-import { editProduct, getProductById } from "@/lib";
-//import Image from "next/image";
+import { editProduct } from "@/lib";
+import { useRouter } from "next/navigation";
 
 const useStyles = createStyles((theme) => ({
   root: {
-    marginLeft: 770,
     marginTop: 80,
     height: "100%",
     width: "50vw",
-    zIndex: 0,
-    position: "absolute",
+    zIndex: 1,
+    marginLeft: 20,
   },
   rowSelected: {
     backgroundColor:
@@ -58,6 +55,7 @@ const useStyles = createStyles((theme) => ({
 export default function MyStoreAllProductsPage() {
   const [productArray, setProductArray] = useState([]);
   const { classes } = useStyles();
+  const router = useRouter();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   var savedCookie;
@@ -90,43 +88,48 @@ export default function MyStoreAllProductsPage() {
 
   async function getAllProducts() {
     try {
-      savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
-      store_id = savedCookie.storeId;
+      if (document.cookie.split("Sel=")[1]) {
+        savedCookie = JSON.parse(document.cookie.split("Sel=")[1]) || '1';
+        store_id = savedCookie.storeId;
 
-      const response = await axios.get(
-        process.env.NEXT_PUBLIC_API + "/menu/get-all-products/" + store_id,
-      );
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API + "/menu/get-all-products/" + store_id,
+        );
 
-      if (response.data.length > 0) {
-        const dataArray = [];
-        for (let i = 0; i < response.data.length; i++) {
-          const {
-            id,
-            name,
-            description,
-            price,
-            stock,
-            type,
-            image,
-            created_date,
-            updated_date,
-          } = response.data[i];
-          const data = {
-            product_id: id,
-            name: name,
-            description: description,
-            price: price,
-            stock: stock,
-            image: image,
-            type: type,
-            created_date: created_date,
-            updated_date: updated_date,
-          };
+        if (response.data.length > 0) {
+          const dataArray = [];
+          for (let i = 0; i < response.data.length; i++) {
+            const {
+              id,
+              name,
+              description,
+              price,
+              stock,
+              type,
+              image,
+              created_date,
+              updated_date,
+            } = response.data[i];
+            const data = {
+              product_id: id,
+              name: name,
+              description: description,
+              price: price,
+              stock: stock,
+              image: image,
+              type: type,
+              created_date: created_date,
+              updated_date: updated_date,
+            };
 
-          dataArray.push(data);
+            dataArray.push(data);
+          }
+
+          setProductArray(dataArray);
         }
-
-        setProductArray(dataArray);
+      } else {
+        
+        router.push('/seller/login')
       }
     } catch (err) {
       console.log(err);

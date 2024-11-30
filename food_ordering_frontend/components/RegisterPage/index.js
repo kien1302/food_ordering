@@ -46,14 +46,16 @@ const RegisterPage = (props) => {
     return result;
   }
 
-  const form = useForm({
+  const form = useForm(
+    {
+      
     initialValues: {
       email: "",
       name: "",
       password: "",
       role_id: "CUS",
       id: makeid(10),
-      created_date: Date.now().toString(),
+      created_date: "",
     },
     schema: joiResolver(registerSchema),
   });
@@ -64,16 +66,22 @@ const RegisterPage = (props) => {
 
   const handleSubmit = async (values) => {
     setLoading(false);
+    var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+    var localISOTime =
+      new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+    const created_date = localISOTime;
+    values["created_date"] = created_date;
+    console.log(values);
     const [data, error] = await accountRegister(values);
 
     if (data) {
       showNotification({
         title: "Register success",
-        message: "Welcome to Food Delivery",
+        message: "Welcome to Food Ordering 🚀",
         color: "green",
         icon: <TiTick color="white" />,
       });
-      router.push("/customer/login");
+      router.push("/login");
     }
 
     if (error) {

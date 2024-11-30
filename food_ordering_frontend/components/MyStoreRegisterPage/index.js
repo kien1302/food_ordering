@@ -21,6 +21,7 @@ import Image from "next/image";
 import image from "/public/images/default-thumbnail.jpg";
 import { client, genRandonString } from "../../components/common";
 import { useRouter } from "next/router";
+import { IpfsClient } from "@/lib/api/ipfsClient";
 
 export default function MyStoreRegisterPage(props) {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function MyStoreRegisterPage(props) {
   // check if account is created successfully
   const [created, setCreated] = useState(false);
   useEffect(() => {
-    console.log("Seller", props);
+    // console.log("Seller", props);
     const user_id = sessionStorage.getItem("TempUser");
 
     if (user_id != null) {
@@ -81,7 +82,6 @@ export default function MyStoreRegisterPage(props) {
     if (name === "" || email === "" || password === "") {
       if (name === "") {
         setEmptyName(true);
-        console.log(emptyName);
       } else {
         setEmptyName(false);
       }
@@ -112,7 +112,7 @@ export default function MyStoreRegisterPage(props) {
     // create account
     var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
     var localISOTime =
-      new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + "+7:00";
+      new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
     const created_date = localISOTime;
     const account_id = genRandonString();
 
@@ -131,18 +131,18 @@ export default function MyStoreRegisterPage(props) {
         data,
       );
 
-      if (response.data.error) {
-        alert(response.data.error);
+      if (response.error) {
+        alert(response.error);
         setLoading(false);
       } else {
-        alert(response.data.message);
+        alert(response.message);
         setCreated(true);
         setLoading(false);
         setAccountId(account_id);
       }
     } catch (err) {
       // @ts-ignore
-      alert(err.response.data.error);
+      alert(err.response.error);
       setLoading(false);
     }
   }
@@ -196,11 +196,12 @@ export default function MyStoreRegisterPage(props) {
 
     var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
     var localISOTime =
-      new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + "+7:00";
+      new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
 
     const created_date = localISOTime;
 
     // Send image into IPFS
+    console.log(file);
     const fileAdded = await IpfsClient.add(file);
     console.log(fileAdded.path);
 
@@ -221,13 +222,13 @@ export default function MyStoreRegisterPage(props) {
         process.env.NEXT_PUBLIC_API + "/store/create",
         data,
       );
-      if (response.data.error) {
-        alert(response.data.error);
+      if (!response.error) {
+        alert(response.error);
         setLoading(false);
       } else {
-        alert(response.data.message);
+        alert(response.message);
         setLoading(false);
-        router.push("/");
+        router.push("/mystore");
       }
     } catch (err) {
       setLoading(false);

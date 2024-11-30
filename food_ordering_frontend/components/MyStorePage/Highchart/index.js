@@ -1,7 +1,7 @@
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts/highstock";
 import { getStoreProductStatus } from "@/lib";
-import { Group, Button, Stack, Text, Tabs, Table, ThemeIcon } from "@mantine/core";
+import { Group, Button, Stack, Text, Tabs, Table, ThemeIcon, NumberInput } from "@mantine/core";
 import { FaRegCalendarAlt } from "react-icons/fa/";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import styles from "./styles.module.scss";
@@ -25,24 +25,6 @@ const Highchart = () => {
       content: "Paid by Test user1",
       amount: "+ 25$",
     },
-    {
-      id: "3",
-      actionType: "💰",
-      content: "Paid by Test user2",
-      amount: "+ 35$",
-    },
-    {
-      id: "4",
-      actionType: "💰",
-      content: "Paid by Test user3",
-      amount: "+ 45$",
-    },
-    {
-      id: "5",
-      actionType: "💰",
-      content: "Paid by Test user4",
-      amount: "+ 55$",
-    },
   ];
 
   const testRows = testTransactions.map((element) => (
@@ -55,7 +37,7 @@ const Highchart = () => {
 
   const [isMonthsChange, setIsMonthsChange] = useState(false);
   const [monthTabValue, setMonthTabValue] = useState("");
-  const [yearTabValue, setYearTabValue] = useState("");
+  const [yearValue, setYearValue] = useState("2024");
   const [profitData, setProfitData] = useState([]);
   const [buttonLoading, SetButtonLoading] = useState(false);
   const [chartOptions, setChartOptions] = useState({
@@ -202,7 +184,7 @@ const Highchart = () => {
     { id: "12", value: "Dec" },
   ];
 
-  const yearsArr = [{ id: "2022" }, { id: "2023" }];
+  // const yearsArr = [{ id: "2022" }, { id: "2023" }, { id: "2024" }];
 
   //Set options for line chart
   useEffect(() => {
@@ -242,7 +224,7 @@ const Highchart = () => {
   //Filter data upon choosing
   useEffect(() => {
     if (monthTabValue != "") {
-      const cachedProfitData = localStorage.getItem(yearTabValue + "_profit");
+      const cachedProfitData = localStorage.getItem(yearValue + "_profit");
       var filteredData = JSON.parse(cachedProfitData);
 
       if (filteredData?.[monthTabValue]) {
@@ -251,7 +233,7 @@ const Highchart = () => {
         setProfitData([]);
       }
     }
-  }, [monthTabValue, yearTabValue]);
+  }, [monthTabValue, yearValue]);
 
   //API called to get data
   useEffect(() => {
@@ -259,23 +241,23 @@ const Highchart = () => {
       savedCookie = JSON.parse(document.cookie.split("Sel=")[1]);
       const data = {
         store_id: savedCookie.storeId,
-        year: yearTabValue,
+        year: yearValue,
       };
       const [response, err] = await getStoreProductStatus(data);
       if (response) {
-        localStorage.setItem(yearTabValue + "_profit", JSON.stringify(response));
+        localStorage.setItem(yearValue + "_profit", JSON.stringify(response));
       } else {
         //console.log(err);
       }
     }
     getProfitData();
-  }, [yearTabValue]);
+  }, [yearValue]);
 
   //Build chart with data
   useEffect(() => {
     setChartOptions({
       title: {
-        text: profitData.length > 0 ? yearTabValue + " Profit" : "",
+        text: profitData.length > 0 ? yearValue + " Profit" : "",
       },
       series: {
         name: profitData.length > 0 ? "USD" : "",
@@ -285,7 +267,7 @@ const Highchart = () => {
         enabled: profitData.length > 0 ? true : false,
       },
     });
-  }, [profitData, yearTabValue]);
+  }, [profitData, yearValue]);
 
   return (
     <Stack h="85%" w="98%" spacing={10}>
@@ -293,46 +275,60 @@ const Highchart = () => {
         <ThemeIcon color="teal" variant="filled" size="2.25rem">
           <FaRegCalendarAlt size={18} />
         </ThemeIcon>
-        <Tabs
-          ml={20}
-          variant="pills"
-          color="teal"
-          //defaultValue={yearsArr[0].id}
-          value={yearTabValue}
-          onTabChange={(value) => setYearTabValue(value)}
-          style={{
-            border: "2px solid #20a86991",
-            borderRadius: "5px",
-          }}>
-          <Tabs.List>
-            {yearsArr.map((item) => (
-              <Tabs.Tab key={item.id} value={item.id}>
-                {item.id}
-              </Tabs.Tab>
-            ))}
-          </Tabs.List>
-        </Tabs>
+        {/* <Flex> */}
+          {/*           
+          <Tabs
+            ml={20}
+            variant="pills"
+            color="teal"
+            //defaultValue={yearsArr[0].id}
+            value={yearTabValue}
+            onTabChange={(value) => setYearTabValue(value)}
+            style={{
+              border: "2px solid #20a86991",
+              borderRadius: "5px",
+            }}>
+            <Tabs.List>
+              {yearsArr.map((item) => (
+                <Tabs.Tab value={"2022"}>
+                  2022
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+          </Tabs> */}
+          <NumberInput
+            defaultValue={2024}
+            value={parseInt(yearValue)}
+            onChange={(value) => setYearValue(value.toString())}
+            styles={{
+              input: { borderColor: "#27ca7ee1", color: "#FFF", width: "fit-content"},
+              control: { borderColor: "#27ca7ee1"},
+              
+            }}
+            className={styles.yearsInput}
+          />
+        {/* </Flex> */}
 
         <Group
           spacing={0}
           style={{
             transition: "0.2s all ease-in-out",
-            opacity: yearTabValue != "" ? 1 : 0,
+            opacity: yearValue != "" ? 1 : 0,
           }}>
-          <div
+          {/* <div
             style={{
               width: "1.625rem",
               border: "1px solid #22704f",
               borderRadius: "5px",
             }}
-          />
+          /> */}
         </Group>
         <Group
           spacing={0}
           style={{
             transition: "0.2s all ease-in-out",
             transitionDelay: "100ms",
-            opacity: yearTabValue != "" ? 1 : 0,
+            opacity: yearValue != "" ? 1 : 0,
           }}>
           <Tabs
             variant="pills"

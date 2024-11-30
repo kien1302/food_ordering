@@ -72,11 +72,11 @@ const ButtonWrapper = ({ cartdata, amount, currency, showSpinner }) => {
   const generateOrderInfo = (account_id, cart, amount, address) => {
     let formatData = [];
 
-    const randomid = genRandomString;
+    const randomid = genRandomString();
 
     var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
     var localISOTime =
-      new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + "+7:00";
+      new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + "+07:00";
 
     let order_info = {
       order_id: randomid,
@@ -144,8 +144,6 @@ const ButtonWrapper = ({ cartdata, amount, currency, showSpinner }) => {
                 amount,
                 full_address,
               );
-              console.log("Info:", asd);
-              console.log("Done");
               createOrderWithPaypal(asd);
               showNotification({
                 title: "Order success",

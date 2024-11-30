@@ -50,7 +50,6 @@ function DetailPage() {
   };
 
   useEffect(() => {
-    console.log(id);
     const getProduct = async () => {
       setProductId(id);
       const [data, error] = await getProductDetailById(id);
@@ -98,7 +97,7 @@ function DetailPage() {
           >
             <Image
               radius="md"
-              src={img_load + productDetail.info.image}
+              src={img_load + productDetail?.info.image}
               alt="Detail Food Image"
               width="100%"
               height="100%"
@@ -112,7 +111,7 @@ function DetailPage() {
           </div>
           <Stack spacing="xs">
             <Title color="white" size={26}>
-              {productDetail.info.name}
+              {productDetail?.info.name}
             </Title>
             <Group>
               <Text color="white">Type:</Text>
