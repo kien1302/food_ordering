@@ -178,7 +178,7 @@ export default function MyStoreNewProductPage() {
       type_id: typeChosen,
       image: fileAdded.path,
       price: price.toString(),
-      stock: stock.toString(),
+      stock: stock,
       created_date: created_date,
       updated_date: updated_date,
     };

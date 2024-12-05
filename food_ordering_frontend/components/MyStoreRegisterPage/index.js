@@ -12,7 +12,7 @@ import {
   Textarea,
   FileInput,
 } from "@mantine/core";
-import { IconAt } from "@tabler/icons";
+import { IconAt, IconExclamationCircle, IconChecks } from "@tabler/icons";
 import styles from "./styles.module.scss";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -22,6 +22,7 @@ import image from "/public/images/default-thumbnail.jpg";
 import { client, genRandonString } from "../../components/common";
 import { useRouter } from "next/router";
 import { IpfsClient } from "@/lib/api/ipfsClient";
+import { showNotification } from "@mantine/notifications";
 
 export default function MyStoreRegisterPage(props) {
   const router = useRouter();
@@ -132,17 +133,26 @@ export default function MyStoreRegisterPage(props) {
       );
 
       if (response.error) {
-        alert(response.error);
-        setLoading(false);
+        showNotification({
+          title: "Register Seller",
+          message: response.error,
+          color: "red",
+          icon: <IconExclamationCircle color="white" />,
+        });
       } else {
-        alert(response.message);
+        showNotification({
+          title: "Register Seller",
+          message: response?.data?.message,
+          color: "green",
+          icon: <IconChecks color="white" />,
+        });
         setCreated(true);
-        setLoading(false);
         setAccountId(account_id);
       }
     } catch (err) {
       // @ts-ignore
       alert(err.response.error);
+    } finally {
       setLoading(false);
     }
   }
@@ -222,18 +232,34 @@ export default function MyStoreRegisterPage(props) {
         process.env.NEXT_PUBLIC_API + "/store/create",
         data,
       );
-      if (!response.error) {
-        alert(response.error);
+      if (response.error) {
+          showNotification({
+            title: "Register Store",
+            message: response.error,
+            color: "red",
+            icon: <IconExclamationCircle color="white" />,
+          });
         setLoading(false);
       } else {
-        alert(response.message);
-        setLoading(false);
+        console.log('check repsonse: ', response)
+        showNotification({
+          title: "Register Store",
+          message: response?.data?.message,
+          color: "green",
+          icon: <IconChecks color="white" />,
+        });
         router.push("/mystore");
       }
     } catch (err) {
-      setLoading(false);
-      alert(err);
+      showNotification({
+        title: "Register Store",
+        message: err,
+        color: "red",
+        icon: <IconExclamationCircle color="white" />,
+      });
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   }
 

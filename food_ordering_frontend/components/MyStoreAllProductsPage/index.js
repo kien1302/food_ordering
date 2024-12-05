@@ -15,11 +15,13 @@ import {
   NumberInput,
   Image,
 } from "@mantine/core";
-import { IconEdit } from "@tabler/icons";
+import { IconEdit, IconChecks, IconExclamationCircle } from "@tabler/icons";
 import axios from "axios";
 import { IpfsClient } from "@/lib/api/ipfsClient";
 import { editProduct } from "@/lib";
 import { useRouter } from "next/navigation";
+import { showNotification } from "@mantine/notifications";
+
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -58,8 +60,19 @@ export default function MyStoreAllProductsPage() {
   const router = useRouter();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  var savedCookie;
-  var store_id;
+  let savedCookie = {};
+
+  const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+    const [key, value] = cookie.split("=");
+    acc[key] = value;
+    return acc;
+  }, {});
+
+  if (cookies.Sel) {
+    savedCookie = JSON.parse(cookies.Sel);
+  } else {
+    console.log("Sel cookie does not exist.");
+  }
 
   const [file, setFile] = useState(null);
   const [fileUrl, setFileUrl] = useState();
@@ -88,12 +101,9 @@ export default function MyStoreAllProductsPage() {
 
   async function getAllProducts() {
     try {
-      if (document.cookie.split("Sel=")[1]) {
-        savedCookie = JSON.parse(document.cookie.split("Sel=")[1]) || '1';
-        store_id = savedCookie.storeId;
-
+      if (savedCookie) {
         const response = await axios.get(
-          process.env.NEXT_PUBLIC_API + "/menu/get-all-products/" + store_id,
+          process.env.NEXT_PUBLIC_API + "/menu/get-all-products/" + savedCookie?.storeId,
         );
 
         if (response.data.length > 0) {
@@ -102,11 +112,15 @@ export default function MyStoreAllProductsPage() {
             const {
               id,
               name,
+              sis,
+              type_id,
+              type_name,
               description,
+              image,
               price,
               stock,
-              type,
-              image,
+              out_of_stock,
+              del_flag,
               created_date,
               updated_date,
             } = response.data[i];
@@ -117,7 +131,8 @@ export default function MyStoreAllProductsPage() {
               price: price,
               stock: stock,
               image: image,
-              type: type,
+              type_id: type_id,
+              type_name: type_name,
               created_date: created_date,
               updated_date: updated_date,
             };
@@ -128,7 +143,7 @@ export default function MyStoreAllProductsPage() {
           setProductArray(dataArray);
         }
       } else {
-        
+
         router.push('/seller/login')
       }
     } catch (err) {
@@ -139,7 +154,7 @@ export default function MyStoreAllProductsPage() {
   // get all type of product
   async function getAllProductType() {
     const response = await axios.get(
-      process.env.NEXT_PUBLIC_API + "/menu/get-all-product-type/" + store_id,
+      process.env.NEXT_PUBLIC_API + "/menu/get-all-product-type/" + savedCookie?.storeId,
     );
 
     const types = response.data;
@@ -149,8 +164,8 @@ export default function MyStoreAllProductsPage() {
         value: "",
         label: "",
       };
-      data.value = types[i].name;
-      data.label = types[i].name;
+      data.value = types[i]?.id;
+      data.label = types[i]?.name;
 
       typeArray.push(data);
     }
@@ -160,13 +175,13 @@ export default function MyStoreAllProductsPage() {
 
   async function getProductInfo(index) {
     try {
-      const { name, type, description, image, price, stock } =
+      const { name, type_id, type_name, description, image, price, stock } =
         productArray[index];
       setNameProduct(name);
       setDescription(description);
       setPrice(price);
       setStock(stock);
-      setTypeChosen(type);
+      setTypeChosen(type_id);
       setFileUrl(process.env.NEXT_PUBLIC_IPFS_URL + image);
       setImageProduct(image);
     } catch (err) {
@@ -177,7 +192,7 @@ export default function MyStoreAllProductsPage() {
   useEffect(() => {
     getAllProducts();
     getAllProductType();
-  }, []);
+  }, [opened]);
 
   function ClearContent() {
     setOpened(false);
@@ -242,18 +257,43 @@ export default function MyStoreAllProductsPage() {
     }
 
     try {
+      const data = {
+        id: idProduct,
+        store_id: savedCookie?.storeId || "",
+        name: nameProduct,
+        description: description,
+        type_id: typeChosen,
+        image: imageProduct,
+        price: price.toString(),
+        stock: stock,
+      }
       const [response, err] = await editProduct(data);
       if (err) {
-        alert(err);
-        setLoading(false);
+        showNotification({
+          title: "Edit Product",
+          message: err,
+          color: "red",
+          icon: <IconExclamationCircle color="white" />,
+        });
         return;
       }
-      alert(response);
+      showNotification({
+        title: "Edit Product",
+        message: response?.message,
+        color: "green",
+        icon: <IconChecks color="white" />,
+      });
+      setOpened(false);
     } catch (err) {
-      alert(err);
+      showNotification({
+        title: "Edit Product",
+        message: err,
+        color: "red",
+        icon: <IconExclamationCircle color="white" />,
+      });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   const rows = productArray.map((item, index) => {
@@ -412,7 +452,6 @@ export default function MyStoreAllProductsPage() {
                     error={emptyType}
                     data={typeProduct}
                     defaultValue={typeChosen}
-                    value={typeChosen}
                     onChange={(value) => setTypeChosen(value)}
                   />
                   {emptyType ? (
