@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import clsx from "classnames";
 import { Text } from "@mantine/core";
-export default function StarRating({ onchange }) {
-  const [rating, setRating] = useState(0);
+export default function StarRating({ onchange, value }) {
+  const [rating, setRating] = useState(value || 0);
   const [hover, setHover] = useState(0);
   const [count, setCount] = useState(0);
+
+  useEffect(()=>{
+    console.log("check star:", value)
+  },[value])
+
   return (
     <div className={styles.starRating}>
       {[...Array(5)].map((star, index) => {

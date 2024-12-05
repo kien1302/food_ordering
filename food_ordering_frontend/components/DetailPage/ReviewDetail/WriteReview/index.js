@@ -16,18 +16,61 @@ import {
   checkOrderComment,
   updateOrderComment,
 } from "@/lib/api/comments";
+import { getOrderAllProductInfo } from "@/lib";
 
-function WriteReview({ orderId, orderComment }) {
+function WriteReview({ orderId }) {
   let cookieInfo = "";
   if (document.cookie.indexOf("Cus") > -1) {
     cookieInfo = JSON.parse(document.cookie.split("Cus=")[1]);
   }
 
+  const [productStore, setProductStore] = useState(null);
   const [comment, setComment] = useState("");
+  const [star, setStar] = useState(0);
+
+  useEffect(() => {
+    async function fetchOrderAllProductInfo() {
+      const request = { order_id: orderId };
+      const [data, error] = await getOrderAllProductInfo(request);
+      console.log("wat", data);
+  
+      if (data?.data) {
+        // Group products by store_id
+        const groupedProducts = data?.data.reduce((acc, item) => {
+          // If the store_id doesn't exist in the accumulator, create a new entry for it
+          if (!acc[item.store_id]) {
+            acc[item.store_id] = {
+              store_id: item.store_id,
+              store_name: item.store_name,
+              comment: item.commment,
+              products: []
+            };
+          }
+          // Push product names for the corresponding store_id
+          acc[item.store_id].products.push(item.product_name);
+          acc[item.store_id].comment = (item.comment);
+          acc[item.store_id].star = (item.star);
+          return acc;
+        }, {});
+  
+        // Convert groupedProducts object into an array of objects for rendering
+        const groupedProductsArray = Object.values(groupedProducts);
+        setProductStore(groupedProductsArray);
+      }
+    }
+  
+    console.log("test");
+    if (orderId != null) {
+      fetchOrderAllProductInfo();
+    }
+  }, [orderId]);
+
 
   const CheckIfExistComment = (value) => {
-    const index = orderComment.map((e) => e.store_id).indexOf(value);
-    const cmtData = orderComment[index].comment;
+    const index = productStore.map((e) => e.store_id).indexOf(value);
+    const cmtData = productStore[index].comment;
+    const starData = productStore[index].star;
+    setStar(starData);
     setComment(cmtData);
   };
 
@@ -84,7 +127,7 @@ function WriteReview({ orderId, orderComment }) {
     comment: "",
     //image: "",
     order_id: orderId,
-    store_id: "",
+    // store_id: storeId,
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -106,15 +149,24 @@ function WriteReview({ orderId, orderComment }) {
             CheckIfExistComment(value);
           }}
         >
-          {orderComment.map((item) => (
-            <Group>
-              <Radio
-                label={item.store_name}
-                value={item.store_id}
-                defaultValue={orderComment}
-              ></Radio>
-            </Group>
-          ))}
+        {productStore?.map((store) => (
+          <Group key={store.store_name}>
+            <Radio
+              label={
+                <>
+                  <b>{store.store_name}</b>
+                  <div>
+                    {store.products.map((product, index) => (
+                      <div key={index}>{product}</div>
+                    ))}
+                  </div>
+                </>
+              }
+              value={store.store_id} // You could use `store.store_id` instead if preferred
+              defaultValue={""}
+            />
+          </Group>
+        ))}
         </Radio.Group>
         <Text color="white">Previous comment</Text>
         <div
@@ -124,7 +176,7 @@ function WriteReview({ orderId, orderComment }) {
             marginBottom: 50,
           }}
         >
-          {comment.length > 0 ? (
+          {comment != null && comment.length > 0 ? (
             <Text p={10} color="teal">
               {comment}
             </Text>
@@ -137,6 +189,7 @@ function WriteReview({ orderId, orderComment }) {
         <StarRating
           name="star"
           size={20}
+          value={star}
           onchange={(value) => {
             setReview((pre) => ({
               ...pre,

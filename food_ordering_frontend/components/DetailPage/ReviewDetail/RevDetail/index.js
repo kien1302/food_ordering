@@ -31,9 +31,11 @@ function RevDetail({ sid }) {
       p={0}
       style={{ marginLeft: 0, marginRight: 0, maxWidth: "100%" }}
     >
-      {!loading ? (
+      {!loading && comments != null ? (
         <Group align="flex-start">
           <Stack justify="flex-start" align="flex-start" style={{ flex: 1 }}>
+            <>{console.log("CCCCCCCCCCCCCCCC: ", comments)}
+            </>
             <UserReview data={comments} />
           </Stack>
           {/* <Stack>

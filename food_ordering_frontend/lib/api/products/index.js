@@ -32,6 +32,10 @@ export async function cancelOrder(data) {
   return await AxiosCLient.fetchingWithData("post", "order/status-change", data);
 }
 
+export async function confirmOrder(data) {
+  return await AxiosCLient.fetchingWithData("post", "order/status-change", data);
+}
+
 export async function searchProduct(data) {
   return await AxiosCLient.fetchingWithData("post", "/menu/search", data);
 }

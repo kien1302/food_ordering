@@ -62,6 +62,7 @@ function DetailPage() {
       }
     };
 
+    if(id != undefined)
     getProduct();
   }, [id]);
 

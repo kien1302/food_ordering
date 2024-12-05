@@ -35,3 +35,7 @@ export async function orderSeenStatusSetSet(data) {
 export async function getUnseenOrderFromStore(data) {
   return await AxiosCLient.fetchingWithData("post", "/order/get-unseen-orders", data);
 }
+
+export async function getOrderAllProductInfo(data) {
+  return await AxiosCLient.fetchingWithData("post", "/order/get-order-all-product-info", data);
+}

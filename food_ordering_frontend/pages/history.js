@@ -35,7 +35,7 @@ import { getHistory } from "@/lib/api/orders";
 import { getOrderById } from "@/lib/api/orders";
 import { getOrderComment } from "@/lib/api/orders";
 import { getOrderReceivedState } from "@/lib/api/orders";
-import { cancelOrder } from "@/lib/api/products";
+import { cancelOrder, confirmOrder } from "@/lib/api/products";
 import { BiCommentDetail } from "react-icons/bi";
 import WriteReview from "@/components/DetailPage/ReviewDetail/WriteReview";
 
@@ -104,13 +104,13 @@ export default function Orders() {
   const [isFinish, setIsFinish] = useState(false);
   const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
+  const [openedConfirm, setOpenedConfirm] = useState(false);
   const [openedState, setOpenedState] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const [openedOrder, setOpenedOrder] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [address, setAddress] = useState("");
   const [payment, setPayment] = useState("");
-  const [price, setPrice] = useState("");
+  // const [price, setPrice] = useState("");
   const [ship, setShip] = useState("");
   const [createdDate, setCreatedDate] = useState("");
   // const [userId, setUserId] = useState("");
@@ -125,19 +125,19 @@ export default function Orders() {
     let status_id;
     switch (status) {
       case "not received":
-        status_id = "PENDING";
+        status_id = "NRY";
         break;
       case "received":
-        status_id = "CONFIRMED";
+        status_id = "RCD";
         break;
       case "shipping":
-        status_id = "SHIPPING";
+        status_id = "SHP";
         break;
       case "success":
-        status_id = "SUCCESS";
+        status_id = "SUC";
         break;
       case "failed":
-        status_id = "FAILED";
+        status_id = "FAL";
         break;
     }
 
@@ -219,23 +219,45 @@ export default function Orders() {
 
   async function cancelingOrder(order_id) {
     setLoading(true);
-
-    const status_id = "FAILED";
-
+    const status_id = "FAL";
     try {
       const dataCancel = {
         account_id: userId,
         order_id: order_id,
         status_id: status_id,
       };
-
       const [data, error] = await cancelOrder(dataCancel);
       if (error) {
-        alert(error);
+        alert(error.error);
         setLoading(false);
       } else {
         alert(data.message);
         setOpened(false);
+        setLoading(false);
+        window.location.reload();
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  }
+
+  async function confirmingOrder(order_id) {
+    setLoading(true);
+    const status_id = "SUC";
+    try {
+      const dataConfirm = {
+        account_id: userId,
+        order_id: order_id,
+        status_id: status_id,
+      };
+      const [data, error] = await confirmOrder(dataConfirm);
+      if (error) {
+        alert(error.error);
+        setLoading(false);
+      } else {
+        alert(data.message);
+        setOpenedConfirm(false);
         setLoading(false);
         window.location.reload();
       }
@@ -304,6 +326,7 @@ export default function Orders() {
                 <Button
                   onClick={async () => {
                     await getComment(row.id);
+                    setOrderId(row.id)
                     setCommentOpened(true);
                   }}
                   variant="outline"
@@ -317,12 +340,23 @@ export default function Orders() {
                   onClose={() => setCommentOpened(false)}
                   size={700}
                 >
-                  {orderComment.length > 0 ? (
-                    <WriteReview orderId={row.id} orderComment={orderComment} />
-                  ) : (
-                    <></>
-                  )}
+                  <WriteReview orderId={orderId} orderComment={orderComment} />
                 </Modal>
+              </>
+            ) : tab == "shipping" ? (
+              <>
+                <Tooltip label={"Waiting to be confirmed "}>
+                  <Button
+                    variant="outline"
+                    color="white"
+                    onClick={() => {
+                      setOrderId(row.id);
+                      setOpenedConfirm(true);
+                    }}
+                  >
+                    <Icon size={22} stroke={1.5} />
+                  </Button>
+                </Tooltip>
               </>
             ) : tab == "received" ? (
               <>
@@ -739,6 +773,63 @@ export default function Orders() {
             style={{ color: "black" }}
             ml={10}
             onClick={() => setOpened(false)}
+          >
+            Cancel
+          </Button>
+        </Group>
+      </Modal>
+      <Modal
+        overlayColor={
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[9]
+            : theme.colors.gray[2]
+        }
+        overlayOpacity={0.55}
+        overlayBlur={3}
+        opened={openedConfirm}
+        onClose={() => setOpenedConfirm(false)}
+      >
+        <Group position="center" mb={20}>
+          <Text
+            component="span"
+            align="center"
+            variant="gradient"
+            gradient={{ from: "#13a762", to: "#27ca7d", deg: 45 }}
+            size="xl"
+            weight={700}
+            style={{ fontFamily: "Greycliff CF, sans-serif" }}
+          >
+            Confirm Receiving Order
+          </Text>
+        </Group>
+        <Group position="center" mb={20}>
+          <Text
+            component="span"
+            align="center"
+            weight={500}
+            style={{ fontFamily: "Greycliff CF, sans-serif" }}
+          >
+            Are you sure want to confirm this order?
+          </Text>
+        </Group>
+        <Group position="center" mb={10}>
+          <Button
+            size="lg"
+            variant="gradient"
+            loading={loading}
+            gradient={{ from: "teal", to: "blue", deg: 60 }}
+            onClick={() => confirmingOrder(orderId)}
+          >
+            OK
+          </Button>
+          <Button
+            size="lg"
+            variant="gradient"
+            gradient={{ from: "grey", to: "white", deg: 60 }}
+            loading={loading}
+            style={{ color: "black" }}
+            ml={10}
+            onClick={() => setOpenedConfirm(false)}
           >
             Cancel
           </Button>
