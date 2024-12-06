@@ -55,7 +55,7 @@ export default function LoginPage(props) {
       showNotification({
         autoClose: 4000,
         title: "Login success",
-        message: "Welcome to Food Ordering 🚀",
+        message: "Welcome to Food Delivery 🚀",
         color: "green",
         icon: <TiTick color="white" />,
       });

@@ -16,8 +16,9 @@ import {
   NumberInput,
   Image,
 } from "@mantine/core";
-import { IconEdit } from "@tabler/icons";
+import { IconEdit, IconChecks, IconExclamationCircle } from "@tabler/icons";
 import { getProductType, getAllProductsType, editProductType } from "@/lib";
+import { showNotification } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -94,7 +95,7 @@ export default function MyStoreAllProductsTypePage() {
     try {
       if (saveCookie?.storeId) {
         const [response, error] = await getAllProductsType(saveCookie?.storeId ?? "");
-  
+
         if (response.length > 0) {
           setTypeArray(response);
         }
@@ -107,7 +108,6 @@ export default function MyStoreAllProductsTypePage() {
   async function getProductTypeInfo(id) {
     try {
       const [response, error] = await getProductType(id);
-
       const { name } = response[0];
       setNameType(name);
     } catch (err) {
@@ -117,7 +117,7 @@ export default function MyStoreAllProductsTypePage() {
 
   useEffect(() => {
     getAllProductTypesInfo();
-  }, []);
+  }, [opened]);
 
   async function editProductTypeInfo() {
     setLoading(true);
@@ -131,19 +131,39 @@ export default function MyStoreAllProductsTypePage() {
     setEmptyName(false);
 
     try {
+      const storeId = saveCookie?.storeId || ""
+      const data = {
+        store_id: storeId,
+        id: idProductType,
+        name: nameType,
+      }
       const [response, error] = await editProductType(data);
       if (error) {
-        alert(error);
-        setLoading(false);
+        showNotification({
+          title: "Edit Product Type",
+          message: error,
+          color: "red",
+          icon: <IconExclamationCircle color="white" />,
+        });
         return;
       }
-      alert(response);
+      showNotification({
+        title: "Edit Product Type ",
+        message: response?.message,
+        color: "green",
+        icon: <IconChecks color="white" />,
+      });
+      setOpened(false);
     } catch (err) {
+      showNotification({
+        title: "Edit Product Type",
+        message: err,
+        color: "red",
+        icon: <IconExclamationCircle color="white" />,
+      });
+    } finally {
       setLoading(false);
-      alert(err);
     }
-
-    setLoading(false);
   }
 
   const rows = typeArray.map((item) => {
