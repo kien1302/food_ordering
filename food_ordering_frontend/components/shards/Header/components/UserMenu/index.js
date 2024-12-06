@@ -22,7 +22,7 @@ export default function UserMenu({ isUser, name, onLogout }) {
   };
 
   return (
-    <Menu position="bottom">
+    <Menu position="bottom-end">
       <Menu.Target>
         <div>
           <User name={name} />

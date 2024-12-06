@@ -1,11 +1,10 @@
-import { Paper, Skeleton, Table, Text, Drawer, useMantineTheme, Button, Flex, Title, Input, TextInput, Textarea, ActionIcon, createStyles, Select, Grid } from "@mantine/core";
+import { Paper, Skeleton, Table, Text, Drawer, useMantineTheme, Button, Flex, Title, Input, TextInput, Textarea, ActionIcon, createStyles, Select } from "@mantine/core";
 import styles from "./styles.module.scss"
 import { useEffect, useState } from "react";
-import { getAllCommentsFromCustomer, getAllStores, getCustomerCommentListFromStore, updateOrderComment } from "@/lib";
+import { getAllCommentsFromCustomer, getAllStores, getCustomerCommentListFromStore } from "@/lib";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import AlertPopup from "../shards/AlertPopup";
-import { useForm } from '@mantine/form';
 function Waiting() {
     return (
         <>
@@ -58,11 +57,10 @@ function Waiting() {
     );
 }
 
-function reviewDetail(item) {
+function reviewDetail(value) {
     const {
         // id,
-        order_id,
-        account_id,
+        // order_id,
         name,
         comment,
         star,
@@ -70,137 +68,66 @@ function reviewDetail(item) {
         // updated_date,
         product_name,
         quantity,
-        order_store_id,
+        // order_store_id,
         // price
-    } = item
-
-    const form = useForm({
-
-        initialValues: {
-            name: name,
-            comment: comment,
-            star: star,
-            created_date: created_date,
-            product_name: product_name,
-            quantity: quantity,
-        },
-    });
-
-    async function handleSubmit(values) {
-        for (const [key, value] of Object.entries(values)) {
-            if (value !== undefined) {
-                continue
-            } else {
-                values[key] = item[key] //update object if the ini not change
-            }
-        }
-        const data = {
-            account_id: account_id,
-            order_id: order_id,
-            store_id: order_store_id,
-            comment: values['comment'],
-            star: values['star']
-        }
-
-        console.log("check data push: ", data)
-        try {
-            const [response, error] = await updateOrderComment(data)
-            console.log("alert: ", response, error)
-            if (response?.error) {
-                alert(response?.error)
-            } else {
-                alert(response?.message)
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
+    } = value
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} style={{ width: '100%' }}>
+        <>
             <TextInput
                 label="Customer's name"
                 variant="default"
                 disabled
-                defaultValue={name}
+                value={name}
                 styles={{
                     label: { marginBottom: '6px' },
                     root: { width: '100%' },
                 }}
-                {...form.getInputProps('name')}
             />
 
             <TextInput
                 label="Comment date"
                 disabled
-                // value={moment(created_date).format("DD/MM/YYYY h:mm a")}
-                defaultValue={moment(created_date).format("DD/MM/YYYY h:mm a")}
+                value={moment(created_date).format("DD/MM/YYYY h:mm a")}
                 styles={{
                     label: { marginBottom: '6px' },
                     root: { width: '100%' },
                 }}
-                {...form.getInputProps('created_date')}
             />
 
             <TextInput
-                label="Product"
+                label="Product and quantity"
                 disabled
-                defaultValue={`${product_name}`}
+                value={`${product_name}: ${quantity}`}
                 styles={{
                     label: { marginBottom: '6px' },
                     root: { width: '100%' },
                 }}
-                {...form.getInputProps('product_name')}
-            />
-
-            <TextInput
-                label="Quantity"
-                disabled
-                defaultValue={`${quantity}`}
-                styles={{
-                    label: { marginBottom: '6px' },
-                    root: { width: '100%' },
-                }}
-                {...form.getInputProps('quantity')}
             />
 
             <TextInput
                 label="Star rating"
                 disabled
-                defaultValue={star + `⭐`}
-                // value={star + ``}
+                value={star + `⭐`}
                 styles={{
                     label: { marginBottom: '6px' },
                     root: { width: '100%' },
                 }}
-                {...form.getInputProps('star')}
             />
 
             <Textarea
                 label="Customer's review"
-                defaultValue={comment}
+                value={comment}
+                disabled
                 styles={{
                     label: { marginBottom: '6px' },
                     root: { width: '100%' },
                 }}
-                {...form.getInputProps('comment')}
             />
-            <Grid grow gutter="lg" mt={16}>
-                <Grid.Col span={4}>
-                    <Button type="button" style={{ width: '100%' }} color="red">
-                        Delete
-                    </Button>
-                </Grid.Col>
-                <Grid.Col span={4}>
-                    <Button type="submit" style={{ width: '100%' }}>
-                        Confirm
-                    </Button>
-                </Grid.Col>
-            </Grid>
-        </form>
+        </>
 
     )
 }
+
 
 const AdminReviewsPage = () => {
     const router = useRouter();
@@ -212,7 +139,6 @@ const AdminReviewsPage = () => {
     const [storeData, setStoreData] = useState([
         { value: "all", label: "All Store" }
     ]);
-
     useEffect(() => {
         setLoading(true)
         if (!document.cookie.split("Adm=")[1]) {
@@ -225,6 +151,7 @@ const AdminReviewsPage = () => {
             router.push("/admin/login")
         } else {
             let savedCookie = JSON.parse(document.cookie.split("Adm=")[1]);
+            console.log("saveCookie: ", savedCookie)
             // let storeId = savedCookie.storeId;
             async function fetchData() {
                 try {
@@ -253,7 +180,7 @@ const AdminReviewsPage = () => {
                         setStoreData((prev) => [...prev, ...formattedStoreData.flat(1)])
                     }
                 } catch (e) {
-                    console.error(e)
+                    console.log(e)
                     throw new Error("Error fetching reviews")
                 } finally {
                     setLoading(false)
@@ -280,7 +207,7 @@ const AdminReviewsPage = () => {
                     setComments([]);
                 }
             } catch (e) {
-                console.error(e)
+                console.log(e)
                 throw new Error("Error fetching reviews")
             } finally {
                 setLoading(false)
@@ -299,7 +226,7 @@ const AdminReviewsPage = () => {
                     setComments([]);
                 }
             } catch (e) {
-                console.error(e)
+                console.log(e)
                 throw new Error("Error fetching reviews")
             } finally {
                 setLoading(false)
