@@ -81,7 +81,7 @@ const RegisterPage = (props) => {
         color: "green",
         icon: <TiTick color="white" />,
       });
-      router.push("/login");
+      router.push("/customer/login");
     }
 
     if (error) {

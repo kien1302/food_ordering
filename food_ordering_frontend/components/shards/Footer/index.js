@@ -126,7 +126,7 @@ function Footer() {
           <HorizontalList
             data={[
               { title: "Account" },
-              { title: "Sign in", path: "/login" },
+              { title: "Sign in", path: "/customer/login" },
               { title: "View Cart", path: "/cart" },
               { title: "My Wishlist", path: "/wishlist" },
               { title: "Track My Order", path: "/history" },
